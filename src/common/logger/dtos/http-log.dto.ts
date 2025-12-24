@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+type ResponseData = { statusCode: number; body: any };
+
 export class HTTPLogDto {
   readonly ip: string;
   readonly method: string;
@@ -13,17 +15,17 @@ export class HTTPLogDto {
     Object.assign(this, partial);
   }
 
-  static from(req: Request, res: Response, resBody: any, startTime: number): HTTPLogDto {
-    const endTime = Date.now();
+  static from(req: Request, res: Response, resData: ResponseData): HTTPLogDto {
+    const duration = Date.now() - (res.locals.requestTimestamp || Date.now());
 
     return new HTTPLogDto({
       ip: req.ip?.replace('::ffff:', '') || 'unknown',
       method: req.method,
       originalUrl: req.originalUrl,
-      durationMs: endTime - startTime,
-      statusCode: res.statusCode,
       requestBody: req.body,
-      responseBody: resBody,
+      durationMs: duration,
+      statusCode: resData.statusCode,
+      responseBody: resData.body,
     });
   }
 }

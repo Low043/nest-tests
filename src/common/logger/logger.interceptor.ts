@@ -12,11 +12,11 @@ export class LoggerInterceptor implements NestInterceptor {
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
     const response = httpContext.getResponse();
-    const startTime = Date.now();
-
+    
     return next.handle().pipe(
       tap((responseBody) => {
-        const httpLogDto = HTTPLogDto.from(request, response, responseBody, startTime);
+        const resData = { statusCode: response.statusCode, body: responseBody };
+        const httpLogDto = HTTPLogDto.from(request, response, resData);
         this.logger.logHttpRequest(httpLogDto);
       }),
     );

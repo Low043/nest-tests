@@ -1,6 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
-import { ILoggerService } from '../logger/logger.interface';
-import { HTTPLogDto } from '../logger/dtos/http-log.dto';
+import { ILoggerService } from '../logger.interface';
+import { HTTPLogDto } from '../dtos/http-log.dto';
 import { Request, Response } from 'express';
 
 @Catch(HttpException)

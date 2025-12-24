@@ -1,4 +1,4 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { UserDto } from './user.dto';
+import { CreateUserSchema } from '../schemas/create-user.schema';
+import { createZodDto } from 'nestjs-zod';
 
-export class CreateUserDto extends OmitType(UserDto, ['id']) {}
+export class CreateUserDto extends createZodDto(CreateUserSchema) {}

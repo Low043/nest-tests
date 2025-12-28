@@ -1,39 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { IPrismaService } from 'src/common/prisma/prisma.interface';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { UserDto } from './dtos/user.dto';
 
 @Injectable()
 export class UserService {
-  private users: UserDto[] = [];
-  private nextId = 1;
+  constructor(private readonly prismaService: IPrismaService) {}
 
-  create(createUserDto: CreateUserDto) {
-    this.users.push({ id: this.nextId++, ...createUserDto });
+  async create(createUserDto: CreateUserDto) {
+    await this.prismaService.user.create({ data: createUserDto });
     return true;
   }
 
-  findAll() {
-    return this.users;
+  async findAll() {
+    return await this.prismaService.user.findMany();
   }
 
-  findOne(id: number) {
-    return this.users.find((user) => user.id === id) || null;
+  async findOne(id: number) {
+    return await this.prismaService.user.findUnique({ where: { id } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex === -1) return false;
-
-    this.users[userIndex] = { ...this.users[userIndex], ...updateUserDto };
-    return true;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    return await this.prismaService.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
   }
 
-  remove(id: number) {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex === -1) return false;
-
-    this.users.splice(userIndex, 1);
-    return true;
+  async remove(id: number) {
+    return await this.prismaService.user.delete({ where: { id } });
   }
 }

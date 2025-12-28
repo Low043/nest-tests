@@ -1,17 +1,22 @@
 import { Module, Global } from '@nestjs/common';
+import { PrismaClient } from 'src/generated/prisma/client';
 import { PrismaConfig } from './prisma.config';
-import { IPrismaService } from './prisma.interface';
-import { PostgresService } from './postgres.service';
+import { PrismaConnectionFactory } from './connection.factory';
+import { PrismaService } from './prisma.service';
 
 @Global()
 @Module({
   providers: [
     PrismaConfig,
     {
-      provide: IPrismaService,
-      useClass: PostgresService, // Can be replaced with other database implementation
+      provide: PrismaClient,
+      useFactory: (prismaConfig: PrismaConfig) => {
+        const connectionData = PrismaConnectionFactory.create(prismaConfig);
+        return new PrismaService(connectionData);
+      },
+      inject: [PrismaConfig],
     },
   ],
-  exports: [IPrismaService],
+  exports: [PrismaClient],
 })
 export class PrismaModule {}

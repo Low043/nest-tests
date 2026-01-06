@@ -1,3 +1,4 @@
+import { User } from 'src/generated/prisma/client';
 import { z } from 'zod';
 
 export const UserSchema = z.object({
@@ -5,4 +6,4 @@ export const UserSchema = z.object({
     name: z.string().min(1),
     email: z.email(),
     password: z.string().min(1),
-});
+}) satisfies z.ZodType<User>;

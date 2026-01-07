@@ -9,14 +9,18 @@ import { PrismaService } from './prisma.service';
   providers: [
     PrismaConfig,
     {
-      provide: PrismaClient,
+      provide: PrismaService,
       useFactory: (prismaConfig: PrismaConfig) => {
         const connectionData = PrismaConnectionFactory.create(prismaConfig);
         return new PrismaService(connectionData);
       },
       inject: [PrismaConfig],
     },
+    {
+      provide: PrismaClient,
+      useExisting: PrismaService,
+    }
   ],
-  exports: [PrismaClient],
+  exports: [PrismaService, PrismaClient],
 })
 export class PrismaModule {}

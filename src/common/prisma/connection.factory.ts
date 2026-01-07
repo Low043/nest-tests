@@ -23,7 +23,7 @@ export class PrismaConnectionFactory {
     const connectionString = config.getDatabaseUrl();
     const schema = config.getDatabaseSchema();
 
-    return { adapter: new PrismaPg({ connectionString }, { schema }) };
+    return { adapter: new PrismaPg({ connectionString }, { schema }), schema };
   }
 
   private static getMariaDbConnection(config: PrismaConfig): DbConnectionData {

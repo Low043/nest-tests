@@ -21,8 +21,9 @@ export class PrismaConnectionFactory {
 
   private static getPostgresConnection(config: PrismaConfig): DbConnectionData {
     const connectionString = config.getDatabaseUrl();
+    const schema = config.getDatabaseSchema();
 
-    return { adapter: new PrismaPg({ connectionString }) };
+    return { adapter: new PrismaPg({ connectionString }, { schema }) };
   }
 
   private static getMariaDbConnection(config: PrismaConfig): DbConnectionData {
